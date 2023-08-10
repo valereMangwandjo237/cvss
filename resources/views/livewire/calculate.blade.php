@@ -1,8 +1,8 @@
 <div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end text-white">
-        <span class="btn btn-{{$css_severity_base}} mx-4 btn-lg" disabled>
+        <span class="btn btn-{{ $severity_base[1] }} mx-4 btn-lg" disabled>
             {{ $base_score }} <br>
-            ({{ $severity_base }})
+            ({{ $severity_base[0] }})
         </span>
     </div>
     

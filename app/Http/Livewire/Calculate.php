@@ -17,8 +17,7 @@ class Calculate extends Component
     public $impact = 0;
     public $exploitability = 0;
     public float $base_score = 0;
-    public string $severity_base = "";
-    public string $css_severity_base = "";
+    public $severity_base = ["", ""];
 
 
     public $attack_vector = 0;
@@ -178,46 +177,13 @@ class Calculate extends Component
             $this->base_score = 0;
         }else{
             if($this->scope == 0){
-                $this->base_score = $this->round_up(min(($this->impact + $this->exploitability), 10));
+                $this->base_score = roundUp(min(($this->impact + $this->exploitability), 10));
             }else{
-                $this->base_score = $this->round_up(min(1.08 * ($this->impact  + $this->exploitability), 10));
+                $this->base_score = roundUp(min(1.08 * ($this->impact  + $this->exploitability), 10));
             }
         }
 
-        $this->rating_scale($this->base_score);
-    }
-
-    public function rating_scale(float $score)
-    {
-        if($score == 0.0){
-            $this->severity_base =  "None";
-            $this->css_severity_base =  "success";
-        }
-        if($score > 0.0 && $score < 4.0){
-            $this->severity_base =  "Low";
-            $this->css_severity_base =  "warning";
-        }
-        if($score > 3.9 && $score < 7.0){
-            $this->severity_base =  "Medium";
-            $this->css_severity_base =  "warning";
-        }
-        if($score > 6.9 && $score < 9.0){
-            $this->severity_base =  "High";
-            $this->css_severity_base =  "danger";
-        }
-        if($score > 8.9 && $score < 10.1){
-            $this->severity_base =  "Critical";
-            $this->css_severity_base =  "danger";
-        }
-
-       // return $this->severity_base;
-    }
-
-    
-    public function round_up(float $number): float
-    {
-        $intInput = round($number * 100000);
-        return $intInput % 10000 === 0 ? $intInput / 100000.0 : (floor($intInput / 10000) + 1) / 10.0;
+        $this->severity_base = ratingScale($this->base_score);
     }
 
     public function render()
