@@ -16,6 +16,10 @@
        .btn-lg{
         color: white !important;
        }
+       .danger{
+        color: red !important;
+        font-weight: bold;
+       }
     </style>
      @livewireStyles
 

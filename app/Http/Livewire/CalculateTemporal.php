@@ -6,13 +6,12 @@ use Livewire\Component;
 
 class CalculateTemporal extends Component
 {
-    public $exploit_code_matury;
-    public $report_confidence;
-    public $remediation_level;
-
-    public $score_base = 7.5;
+    public $exploit_code_matury = 1;
+    public $report_confidence = 1;
+    public $remediation_level = 1;
+    public $score_base = null;
     
-    public $score_temporal;
+    public $score_temporal = null;
     public $severity_base = ["", ""];
 
     public $temporal = [
@@ -61,10 +60,18 @@ class CalculateTemporal extends Component
     }
 
     public function calculateTemporalScore()
-    {
-        $this->score_temporal = roundUp($this->score_base * $this->exploit_code_matury *  $this->remediation_level * $this->report_confidence);
-        
-        $this->severity_base = ratingScale($this->score_temporal);
+    {  
+        $this->score_base = session('base');
+
+        if($this->score_base){
+            $this->score_temporal = roundUp($this->score_base * $this->exploit_code_matury *  $this->remediation_level * $this->report_confidence);
+            if ($this->score_temporal == 0) {
+                $this->score_temporal = $this->score_base;
+            }
+            $this->severity_base = ratingScale($this->score_temporal);
+        }
+
+       
     }
 
     

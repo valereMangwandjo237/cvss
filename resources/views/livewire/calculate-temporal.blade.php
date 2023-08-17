@@ -1,9 +1,16 @@
 <div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end text-white">
-        <span class="btn btn-{{ $severity_base[1] }} mx-4 btn-lg" disabled>
-            {{ $score_temporal }} <br>
-            ({{ $severity_base[0] }})
-        </span>
+        @if ($score_base === null)
+            <span class="danger mx-4 btn-lg">
+                *Select values for all base metrics to generate score
+            </span>
+        @else
+            <span class="btn btn-{{ $severity_base[1] }} mx-4 btn-lg" disabled>
+                {{ $score_temporal }} <br>
+                ({{ $severity_base[0] }})
+            </span>
+        @endif
+        
     </div>
     <div class="card mx-4" style="max-width: 100%;">
         <div class="card-header text-white bg-secondary">Temporal Score</div>

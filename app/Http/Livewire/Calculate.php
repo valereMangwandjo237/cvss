@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Livewire\Livewire;
 
 class Calculate extends Component
 {
@@ -12,11 +13,11 @@ class Calculate extends Component
 
         BASE
     */
-    protected $base_verified = [];
+    public $base_verified = [];
     public $ISS = 16;
     public $impact = 0;
     public $exploitability = 0;
-    public float $base_score = 0;
+    public $base_score = null;
     public $severity_base = ["", ""];
 
 
@@ -30,14 +31,11 @@ class Calculate extends Component
     public $availability = 0;
 
     
+    
     public $impact_conf = null;
     public $impact_integ = null;
     public $impact_avail = null;
 
-    public function mount()
-    {
-        $this->base_verified = [];
-    }
 
     public $base = [
         "Attack Vector (AV)" => [
@@ -150,16 +148,16 @@ class Calculate extends Component
 
     /*cette fonction permet de didentifer tous les elements choisis sur la 
     calculatrice, afin deffectuer un calcul quand tous les elements seront selectionnés*/
-    public function select_case($element){
+    public function select_case($element)
+    { 
+
         if (!in_array($element, $this->base_verified)) {
             $this->base_verified[] = $element;
         }
-        $this->calculate_base_score();
-        //dump($this->base_verified);
-
-        /*if(count($this->base_verified) == 8){
+            
+        if(count($this->base_verified) == 8){
             $this->calculate_base_score();
-        }*/
+        }
     }
 
     public function calculate_base_score(){
@@ -182,9 +180,29 @@ class Calculate extends Component
                 $this->base_score = roundUp(min(1.08 * ($this->impact  + $this->exploitability), 10));
             }
         }
-
         $this->severity_base = ratingScale($this->base_score);
+
+        // Supprime toutes les données de la session
+        session()->forget('base');
+        // creer un session
+        session()->put('base', $this->base_score);
+
+        // jappelle la methode calcul de temporelscore
+        $this->call_temporal_calcul();
+
+
     }
+
+    public function call_temporal_calcul()
+    {
+        // Résolution du contrôleur cible
+        $temporal = app(CalculateTemporal::class);
+
+        // Appel de la fonction dans le contrôleur cible
+        $temporal->calculateTemporalScore();
+      
+    }
+
 
     public function render()
     {
