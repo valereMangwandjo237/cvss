@@ -163,11 +163,7 @@ class HomeController extends Controller
     {
         session()->forget('base');
 
-        return view("index", [
-            "base" => $this->base,
-            "temporal" => $this->temporal,
-            "environmental" => $this->environmental,
-        ]);
+        return view("index");
     }
 
 

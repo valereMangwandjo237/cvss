@@ -29,22 +29,11 @@
 
     <script type="module">
         $(document).ready(function() {
-            function maFonction() {
-                // Sélectionnez les boutons ayant un attribut name similaire
-                var valeur = "Not Defined (X)";
-                var boutons = $('button[name^="' + valeur + '"]');
-                
-                // Faites quelque chose avec les boutons sélectionnés
-                boutons.addClass('btn-danger');
-            }
-            
-
-        $("button").click(function(){
-            maFonction();
-            var firstClass = $(this).attr('class').split(' ')[0];
-            $('.' + firstClass).removeClass('btn-danger')
-            $(this).addClass('btn-danger');
-        });
+            $("button").click(function(){
+                var firstClass = $(this).attr('class').split(' ')[0];
+                $('.' + firstClass).removeClass('btn-danger')
+                $(this).addClass('btn-danger');
+            });
     });
     </script>
 
@@ -56,33 +45,10 @@
 
     <div class="p-4"></div>
 
-    @livewire('calculate-temporal')
-    
-
     <div class="p-4"></div>
-
-    <div class="card mx-4" style="max-width: 100%;">
-        <div class="card-header text-white bg-secondary">Environmental Score</div>
-        <div class="card-body">
-            <div class="row d-flex mt-8px">
-                @foreach($environmental as $cle => $valeur)
-                    <div class="col-md-6 ms-auto">
-                        <h4 mt-2>{{ $cle }}</h4>
-                        @foreach($valeur as $key => $val)
-                            @if ($key != "id")
-                            <button 
-                            type="button" 
-                            name="{{ $key }}" 
-                            class="{{$environmental[$cle]['id']}} btn btn-secondary mt-1" 
-                            value="{{ $val }}">{{ $key }}</button>
-                            @endif
-                        @endforeach
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
     
     @livewireScripts
+    
+
 </body>
 </html>
