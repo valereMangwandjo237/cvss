@@ -46,18 +46,3 @@
 
 </div>
 
-@push('scripts')
-    <script>
-        document.addEventListener('test', function() {
-            alert("ieieie");
-            // Sélectionnez les boutons ayant un attribut name similaire
-            var valeur = "Not Defined (X)";
-            var boutons = $('button[name^="' + valeur + '"]');
-            
-            // Faites quelque chose avec les boutons sélectionnés
-            boutons.addClass('btn-danger');
-            
-        });
-    </script>
-@endpush
-

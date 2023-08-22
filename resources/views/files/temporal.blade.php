@@ -22,6 +22,7 @@
                         @foreach($valeur as $key => $val)
                             @if ($key != "id")
                             <button type="button" 
+                                name="{{ $key }}" 
                                 class="{{$temporal[$cle]['id']}} btn btn-secondary mt-1" 
                                 value="{{ $val }}" 
                                 wire:click="recuperation({{ $val }}, '{{$temporal[$cle]['id']}}')"

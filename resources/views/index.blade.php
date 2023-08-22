@@ -29,6 +29,13 @@
 
     <script type="module">
         $(document).ready(function() {
+            // Sélectionnez les boutons ayant un attribut name similaire
+            var valeur = "Not Defined (X)";
+            var boutons = $('button[name^="' + valeur + '"]');
+            // Faites quelque chose avec les boutons sélectionnés
+            boutons.addClass('btn-danger');
+
+            
             $("button").click(function(){
                 var firstClass = $(this).attr('class').split(' ')[0];
                 $('.' + firstClass).removeClass('btn-danger')
