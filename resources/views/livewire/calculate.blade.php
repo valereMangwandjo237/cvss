@@ -40,12 +40,8 @@
         </div>
     </div>
 
-    <div class="p-4"></div>
-
     @include('files.temporal')
 
-    <div class="p-4"></div>
-    
     @include('files.environ')
 
 </div>
