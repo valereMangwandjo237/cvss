@@ -386,10 +386,13 @@ class Calculate extends Component
                 $this->AvailabilityRequirement = $value;
                 break;
             case "env_MAV":
+                if($value==-1){$this->ModifiedAttackVector = $this->attack_vector; break;}
                 $this->ModifiedAttackVector = $value;
                 $this->tab["ModifiedAttackVector"] = 0;
                 break;
             case "env_MS":
+                if($value==-1){$this->ModifiedScope = $this->scope; break;}
+
                 if($value == 1 && $this->ModifiedPrivilegesRequired  == 0.62){
                     $this->ModifiedPrivilegesRequired = 0.68;
                 }elseif($value == 1 && $this->ModifiedPrivilegesRequired == 0.27 ){
@@ -404,6 +407,8 @@ class Calculate extends Component
                 $this->tab["ModifiedScope"] = 0;
                 break;
             case "env_MPR":
+                if($value==-1){$this->ModifiedPrivilegesRequired = $this->privilige_required; break;}
+
                 if($this->ModifiedScope == 1 && $value == 0.62){
                     $this->ModifiedPrivilegesRequired = 0.68;
                 }elseif($this->ModifiedScope == 1 && $value == 0.27 ){
@@ -414,22 +419,27 @@ class Calculate extends Component
                 $this->tab["ModifiedPrivilegesRequired"] = 0;
                 break;
             case "env_MAC":
+                if($value==-1){$this->ModifiedAttackComplexity = $this->attack_complexity; break;}
                 $this->ModifiedAttackComplexity = $value;
                 $this->tab["ModifiedAttackComplexity"] = 0;
                 break;
             case "env_MUI":
+                if($value==-1){$this->ModifiedUserInteraction = $this->user_interaction; break;}
                 $this->ModifiedUserInteraction = $value;
                 $this->tab["ModifiedUserInteraction"] = 0;
                 break;
             case "env_MC":
+                if($value==-1){$this->ModifiedConfidentiality = $this->confidentiality; break;}
                 $this->ModifiedConfidentiality = $value;
                 $this->tab["ModifiedConfidentiality"] = 0;
                 break;
             case "env_MI":
+                if($value==-1){$this->ModifiedIntegrity = $this->integrity; break;}
                 $this->ModifiedIntegrity= $value;
                 $this->tab["ModifiedIntegrity"] = 0;
                 break;
             case "env_MA":
+                if($value==-1){$this->ModifiedAvailability = $this->availability; break;}
                 $this->ModifiedAvailability = $value;
                 $this->tab["ModifiedAvailability"] = 0;
                 break;
