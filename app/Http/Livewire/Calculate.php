@@ -21,14 +21,14 @@ class Calculate extends Component
     public $severity_base = ["", ""];
 
 
-    public $attack_vector = 0;
-    public $attack_complexity = 0;
-    public $privilige_required = 0;
-    public $user_interaction = 0;
-    public $integrity = 0;
-    public $scope = 0;
-    public $confidentiality = 0;
-    public $availability = 0;
+    public $attack_vector = null;
+    public $attack_complexity = null;
+    public $privilige_required = null;
+    public $user_interaction = null;
+    public $integrity = null;
+    public $scope = null;
+    public $confidentiality = null;
+    public $availability = null;
     
     public $impact_conf = null;
     public $impact_integ = null;
@@ -131,26 +131,34 @@ class Calculate extends Component
         ENVIRONNEMENT
     */
     public $MISS;
-    public $ModifiedImpact = 1;
-    public $ModifiedScope = 1;
-    public $ModifiedAttackVector = 1;
-    public $ModifiedAttackComplexity = 1;
-    public $ModifiedPrivilegesRequired = 1;
-    public $ModifiedUserInteraction = 1;
-    public $ModifiedExploitability = 1;
-    public $ExploitCodeMaturity = 1;
-    public $RemediationLevel = 1;
-    public $ReportConfidence = 1;
+    public $ModifiedImpact = 0;
+    public $ModifiedScope = -1;
+    public $ModifiedAttackVector = -1;
+    public $ModifiedAttackComplexity = -1;
+    public $ModifiedPrivilegesRequired = -1;
+    public $ModifiedUserInteraction = -1;
+    public $ModifiedExploitability = 0;
     public $ConfidentialityRequirement = 1;
-    public $ModifiedConfidentiality = 1;
+    public $ModifiedConfidentiality = -1;
     public $IntegrityRequirement = 1;
-    public $ModifiedIntegrity = 1;
+    public $ModifiedIntegrity = -1;
     public $AvailabilityRequirement = 1;
-    public $ModifiedAvailability = 1;
+    public $ModifiedAvailability = -1;
 
     public $EnvironmentalScore = null;
 
     public $severity_env = ["", ""];
+
+    public $tab = [
+        "ModifiedAttackVector" => -1,
+        "ModifiedAttackComplexity" => -1,
+        "ModifiedPrivilegesRequired"=> -1,
+        "ModifiedUserInteraction" => -1,
+        "ModifiedConfidentiality" => -1,
+        "ModifiedIntegrity" => -1,
+        "ModifiedAvailability" => -1,
+        "ModifiedScope" => -1
+    ];
     
     public $environmental  = [
         "Confidentiality Requirement (CR)" => [
@@ -176,7 +184,7 @@ class Calculate extends Component
         ],
         "Modified Attack Vector (MAV)" => [
             "id" => "env_MAV",
-            "Not Defined (X)" => 1,
+            "Not Defined (X)" => -1,
             "Network (N)" => 0.85,
             "Adjacent (A)" => 0.62,
             "Local (L)" => 0.55,
@@ -184,46 +192,46 @@ class Calculate extends Component
         ],
         "Modified Attack Complexity (MAC)" => [
             "id" => "env_MAC",
-            "Not Defined (X)" => 1,
+            "Not Defined (X)" => -1,
             "Low (L)" => 0.77,
             "High (H)" => 0.44
         ],
         "Modified Privileges Required (MPR)" => [
             "id" => "env_MPR",
-            "Not Defined (X)" => 1,
+            "Not Defined (X)" => -1,
             "None (N)" => 0.85,
-            "Low (L)" => 0.62, //(0.68 if Scope / Modified Scope is Changed)
-            "High (H)" => 0.27 //(0.50 if Scope / Modified Scope is Changed)
+            "Low (L)" => 0.62, //(0.68 if Modified Scope is Changed)
+            "High (H)" => 0.27 //(0.50 if Modified Scope is Changed)
         ],
         "Modified User Interaction (MUI)" => [
             "id" => "env_MUI",
-            "Not Defined (X)" => 1,
+            "Not Defined (X)" => -1,
             "None (N)" => 0.85,
             "Required (R)" => 0.62
         ],
         "Modified Scope (MS)" => [
             "id" => "env_MS",
-            "Not Defined (X)" => 0,
+            "Not Defined (X)" => -1,
             "Unchanged (S)" => 0,
             "Changed (C)" => 1
         ],
         "Modified Confidentiality (MC)" => [
             "id" => "env_MC",
-            "Not Defined (X)" => 1,
+            "Not Defined (X)" => -1,
             "None (N)" => 0,
             "Low (L)" => 0.22,
             "High (H)" => 0.56
         ],
         "Modified Integrity (MI)" => [
             "id" => "env_MI",
-            "Not Defined (X)" => 1,
+            "Not Defined (X)" => -1,
             "None (N)" => 0,
             "Low (L)" => 0.22,
             "High (H)" => 0.56
         ],
         "Modified Availability (MA)" => [
             "id" => "env_MA",
-            "Not Defined (X)" => 1,
+            "Not Defined (X)" => -1,
             "None (N)" => 0,
             "Low (L)" => 0.22,
             "High (H)" => 0.56
@@ -235,18 +243,22 @@ class Calculate extends Component
         switch ($id) {
             case "base_AV":
                 $this->attack_vector = $value;
+                if($this->tab["ModifiedAttackVector"]==-1){$this->ModifiedAttackVector = $this->attack_vector;}
                 $this->select_case($id);
                 break;
             case "base_AC":
                 $this->attack_complexity = $value;
+                if($this->tab["ModifiedAttackComplexity"]==-1){$this->ModifiedAttackComplexity = $this->attack_complexity;}
                 $this->select_case($id);
                 break;
             case "base_UI":
                 $this->user_interaction = $value;
+                if($this->tab["ModifiedUserInteraction"]==-1){$this->ModifiedUserInteraction = $this->user_interaction;}
                 $this->select_case($id);
                 break;
             case "base_I":
                 $this->integrity = $value;
+                if($this->tab["ModifiedIntegrity"]==-1){$this->ModifiedIntegrity = $this->integrity;}
                 $this->select_case($id);
                 break;
             case "base_S":
@@ -261,29 +273,31 @@ class Calculate extends Component
                         $this->privilige_required = 0.27;
                     }
                 $this->scope = $value;
+                if($this->tab["ModifiedScope"]==-1){$this->ModifiedScope = $this->scope;}
+                if($this->tab["ModifiedPrivilegesRequired"]==-1){$this->ModifiedPrivilegesRequired = $this->privilige_required;}
                 $this->select_case($id);
                 break;
             case "base_PR":
                 if($this->scope == 1 && $value == 0.62){
                     $this->privilige_required = 0.68;
-                    $this->select_case($id);
                 }elseif($this->scope == 1 && $value == 0.27 ){
                         $this->privilige_required = 0.5;
-                        $this->select_case($id);
                     }else{
                         $this->privilige_required = $value;
-                        $this->select_case($id);
                     }
+                if($this->tab["ModifiedPrivilegesRequired"]==-1){$this->ModifiedPrivilegesRequired = $this->privilige_required;}
+                $this->select_case($id);
                 break;
             case "base_C":
                 $this->confidentiality = $value;
+                if($this->tab["ModifiedConfidentiality"]==-1){$this->ModifiedConfidentiality = $this->confidentiality;}
                 $this->select_case($id);
                 break;
             case "base_A":
                 $this->availability = $value;
+                if($this->tab["ModifiedAvailability"]==-1){$this->ModifiedAvailability = $this->availability;}
                 $this->select_case($id);
                 break;
-
             // metrique temorelle
             case "temporal_E":
                 $this->exploit_code_matury = $value;
@@ -300,27 +314,26 @@ class Calculate extends Component
             default:
                 echo "error";
         }
-        
-        
+
     }
 
     /*cette fonction permet de didentifer tous les elements choisis sur la 
     calculatrice, afin deffectuer un calcul quand tous les elements seront selectionnés*/
     public function select_case($element)
     {
-        $this->dispatchBrowserEvent('test');
         if (!in_array($element, $this->base_verified)) {
             $this->base_verified[] = $element;
         }
-            
+
         if(count($this->base_verified) == 8){
             $this->calculate_base_score();
         }
-        
     }
 
-    public function calculate_base_score(){
+    public function calculate_base_score()
+    {
         $this->ISS = 1 - ( (1 - $this->confidentiality) * (1 - $this->integrity) * (1 - $this->availability) );
+        
         if($this->scope == 0){
             $this->impact = 6.42 * $this->ISS;
         }else{
@@ -343,12 +356,6 @@ class Calculate extends Component
         // jappelle la methode calcul de temporelscore et environnemental score
         $this->calculateTemporalScore();
         $this->CalculateEnvScore();
-
-        $this->dispatchBrowserEvent('test');
-
-        
-
-
     }
 
     public function calculateTemporalScore()
@@ -359,6 +366,8 @@ class Calculate extends Component
                 $this->score_temporal = $this->base_score;
             }
             $this->severity_temporal = ratingScale($this->score_temporal);
+            
+            $this->CalculateEnvScore();
         }
     }
 
@@ -378,6 +387,7 @@ class Calculate extends Component
                 break;
             case "env_MAV":
                 $this->ModifiedAttackVector = $value;
+                $this->tab["ModifiedAttackVector"] = 0;
                 break;
             case "env_MS":
                 if($value == 1 && $this->ModifiedPrivilegesRequired  == 0.62){
@@ -391,6 +401,7 @@ class Calculate extends Component
                         $this->ModifiedPrivilegesRequired = 0.27;
                     }
                 $this->ModifiedScope = $value;
+                $this->tab["ModifiedScope"] = 0;
                 break;
             case "env_MPR":
                 if($this->ModifiedScope == 1 && $value == 0.62){
@@ -400,21 +411,27 @@ class Calculate extends Component
                     }else{
                         $this->ModifiedPrivilegesRequired = $value;
                     }
+                $this->tab["ModifiedPrivilegesRequired"] = 0;
                 break;
             case "env_MAC":
                 $this->ModifiedAttackComplexity = $value;
+                $this->tab["ModifiedAttackComplexity"] = 0;
                 break;
             case "env_MUI":
                 $this->ModifiedUserInteraction = $value;
+                $this->tab["ModifiedUserInteraction"] = 0;
                 break;
             case "env_MC":
                 $this->ModifiedConfidentiality = $value;
+                $this->tab["ModifiedConfidentiality"] = 0;
                 break;
             case "env_MI":
                 $this->ModifiedIntegrity= $value;
+                $this->tab["ModifiedIntegrity"] = 0;
                 break;
             case "env_MA":
                 $this->ModifiedAvailability = $value;
+                $this->tab["ModifiedAvailability"] = 0;
                 break;
             default:
                 echo "error";
@@ -435,14 +452,13 @@ class Calculate extends Component
     }
     
     public function CalculateEnvScore()
-    {
+    { 
         if ($this->base_score !== null) {
             $this->MISS = $this->CalculMISS();
-
             if($this->ModifiedScope == 0){
                 $this->ModifiedImpact = 6.42 * $this->MISS;
             }else{
-                $this->impact = 7.52 * ($this->MISS - 0.029) - 3.25 * ($this->MISS * 0.9731 - 0.02)**13;
+                $this->ModifiedImpact = 7.52 * ($this->MISS - 0.029) - 3.25 * ($this->MISS * 0.9731 - 0.02)**13;
             }
     
             $this->ModifiedExploitability = 8.22 * $this->ModifiedAttackVector * 
@@ -457,24 +473,27 @@ class Calculate extends Component
                                             roundUp(
                                                 min(($this->ModifiedImpact + $this->ModifiedExploitability), 10)
                                                 ) *
-                                            $this->ExploitCodeMaturity * $this->RemediationLevel * $this->ReportConfidence   
+                                            $this->exploit_code_matury * $this->remediation_level * $this->report_confidence   
                                         );
                 }else{
                     $this->EnvironmentalScore = roundUp(
                         roundUp(
                             min(1.08 * ($this->ModifiedImpact  + $this->ModifiedExploitability), 10)
                             ) *
-                        $this->ExploitCodeMaturity * $this->RemediationLevel * $this->ReportConfidence   
+                        $this->exploit_code_matury * $this->remediation_level * $this->report_confidence   
                     );
                 }
             }
+            
             $this->severity_env = ratingScale($this->EnvironmentalScore);
         }
        
     }
     
+
     public function render()
     {
         return view('livewire.calculate');
     }
 }
+
