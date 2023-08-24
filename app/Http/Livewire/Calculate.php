@@ -7,6 +7,10 @@ use Livewire\Livewire;
 
 class Calculate extends Component
 {
+    public $vector_string_tab = [];
+    public $vector_string = "";
+
+
     /* METRIQUE 
 
             DE
@@ -36,50 +40,50 @@ class Calculate extends Component
 
     public $base = [
         "Attack Vector (AV)" => [
-            "id" => "base_AV",
-            "Network (N)" => 0.85,
-            "Adjacent (A)" => 0.62,
-            "Local (L)" => 0.55,
-            "Physical (P)" => 0.2
+            "id" => "AV",
+            "Network (N)" => ["N", 0.85],
+            "Adjacent (A)" => ["A",0.62],
+            "Local (L)" => ["L", 0.55],
+            "Physical (P)" => ["P", 0.2]
         ],
         "Scope (S)" => [
-            "id" => "base_S",
-            "Unchanged (S)" => 0,
-            "Changed (C)" => 1
+            "id" => "S",
+            "Unchanged (U)" => ["U", 0],
+            "Changed (C)" => ["C", 1]
         ],
         "Attack Complexity (AC)" => [
-            "id" => "base_AC",
-            "Low (L)" => 0.77,
-            "High (H)" => 0.44
+            "id" => "AC",
+            "Low (L)" => ["L", 0.77],
+            "High (H)" => ["H", 0.44]
         ],
         "Confidentiality (C)" => [
-            "id" => "base_C",
-            "None (N)" => 0,
-            "Low (L)" => 0.22,
-            "High (H)" => 0.56
+            "id" => "C",
+            "None (N)" => ["N", 0],
+            "Low (L)" => ["L", 0.22],
+            "High (H)" => ["H", 0.56]
         ],
         "Privileges Required (PR)" => [
-            "id" => "base_PR",
-            "None (N)" => 0.85,
-            "Low (L)" => 0.62, //(0.68 if Scope / Modified Scope is Changed)
-            "High (H)" => 0.27 //(0.50 if Scope / Modified Scope is Changed)
+            "id" => "PR",
+            "None (N)" => ["N", 0.85],
+            "Low (L)" => ["L", 0.62], //(0.68 if Scope / Modified Scope is Changed)
+            "High (H)" => ["H", 0.27] //(0.50 if Scope / Modified Scope is Changed)
         ],
         "Integrity (I)" => [
-            "id" => "base_I",
-            "None (N)" => 0,
-            "Low (L)" => 0.22,
-            "High (H)" => 0.56
+            "id" => "I",
+            "None (N)" => ["N", 0],
+            "Low (L)" => ["L", 0.22],
+            "High (H)" => ["H", 0.56]
         ],
         "User Interaction (UI)" => [
-            "id" => "base_UI",
-            "None (N)" => 0.85,
-            "Required (R)" => 0.62
+            "id" => "UI",
+            "None (N)" => ["N", 0.85],
+            "Required (R)" => ["R", 0.62]
         ],
         "Availability (A)" => [
-            "id" => "base_A",
-            "None (N)" => 0,
-            "Low (L)" => 0.22,
-            "High (H)" => 0.56
+            "id" => "A",
+            "None (N)" => ["N", 0],
+            "Low (L)" => ["L", 0.22],
+            "High (H)" => ["H", 0.56]
         ],
     ];
 
@@ -97,27 +101,27 @@ class Calculate extends Component
 
     public $temporal = [
         "Exploit Code Maturity (E)" => [
-            "id" => "temporal_E",
-            "Not Defined (X)" => 1,
-            "Unproven (U)" => 0.91,
-            "Proof-of-Concept (P)" => 0.94,
-            "Functionnal (F)" => 0.97,
-            "High (H)" => 1
+            "id" => "E",
+            "Not Defined (X)" => ["X", 1],
+            "Unproven (U)" => ["U", 0.91],
+            "Proof-of-Concept (P)" => ["P", 0.94],
+            "Functionnal (F)" => ["F", 0.97],
+            "High (H)" => ["H", 1]
         ],
         "Remediation Level (RL)" => [
-            "id" => "temporal_RL",
-            "Not Defined (X)" => 1,
-            "Official Fix (O)" => 0.95,
-            "Temporary Fix (T)" => 0.96,
-            "Workaround (W)" => 0.97,
-            "Unavailable (U)" => 1
+            "id" => "RL",
+            "Not Defined (X)" => ["X", 1],
+            "Official Fix (O)" => ["O", 0.95],
+            "Temporary Fix (T)" => ["T", 0.96],
+            "Workaround (W)" => ["W", 0.97],
+            "Unavailable (U)" => ["U", 1]
         ],
         "Report Confidence (RC)" => [
-            "id" => "temporal_RC",
-            "Not Defined (X)" => 1,
-            "Unknown (U)" => 0.92,
-            "Reasonable (R)" => 0.96,
-            "Confirmed (C)" => 1
+            "id" => "RC",
+            "Not Defined (X)" => ["X", 1],
+            "Unknown (U)" => ["U", 0.92],
+            "Reasonable (R)" => ["R", 0.96],
+            "Confirmed (C)" => ["C", 1]
         ],
     ];
 
@@ -162,106 +166,109 @@ class Calculate extends Component
     
     public $environmental  = [
         "Confidentiality Requirement (CR)" => [
-            "id" => "env_CR",
-            "Not Defined (X)" => 1,
-            "Low (L)" => 0.5,
-            "Medium (M)" => 1,
-            "High (H)" => 1.5,
+            "id" => "CR",
+            "Not Defined (X)" => ["X", 1],
+            "Low (L)" => ["L", 0.5],
+            "Medium (M)" => ["M", 1],
+            "High (H)" => ["H", 1.5],
         ],
         "Integrity Requirement (IR)" => [
-            "id" => "env_IR",
-            "Not Defined (X)" => 1,
-            "Low (L)" => 0.5,
-            "Medium (M)" => 1,
-            "High (H)" => 1.5,
+            "id" => "IR",
+            "Not Defined (X)" => ["X", 1],
+            "Low (L)" => ["L", 0.5],
+            "Medium (M)" => ["M", 1],
+            "High (H)" => ["H", 1.5],
         ],
         "Availability Requirement (AR)" => [
-            "id" => "env_AR",
-            "Not Defined (X)" => 1,
-            "Low (L)" => 0.5,
-            "Medium (M)" => 1,
-            "High (H)" => 1.5,
+            "id" => "AR",
+            "Not Defined (X)" => ["X", 1],
+            "Low (L)" => ["L", 0.5],
+            "Medium (M)" => ["M", 1],
+            "High (H)" => ["H", 1.5],
         ],
         "Modified Attack Vector (MAV)" => [
-            "id" => "env_MAV",
-            "Not Defined (X)" => -1,
-            "Network (N)" => 0.85,
-            "Adjacent (A)" => 0.62,
-            "Local (L)" => 0.55,
-            "Physical (P)" => 0.2
+            "id" => "MAV",
+            "Not Defined (X)" => ["X", -1],
+            "Network (N)" => ["N", 0.85],
+            "Adjacent (A)" => ["A", 0.62],
+            "Local (L)" => ["L", 0.55],
+            "Physical (P)" => ["P", 0.2]
         ],
         "Modified Attack Complexity (MAC)" => [
-            "id" => "env_MAC",
-            "Not Defined (X)" => -1,
-            "Low (L)" => 0.77,
-            "High (H)" => 0.44
+            "id" => "MAC",
+            "Not Defined (X)" => ["X", -1],
+            "Low (L)" => ["L", 0.77],
+            "High (H)" => ["H", 0.44]
         ],
         "Modified Privileges Required (MPR)" => [
-            "id" => "env_MPR",
-            "Not Defined (X)" => -1,
-            "None (N)" => 0.85,
-            "Low (L)" => 0.62, //(0.68 if Modified Scope is Changed)
-            "High (H)" => 0.27 //(0.50 if Modified Scope is Changed)
+            "id" => "MPR",
+            "Not Defined (X)" => ["X", -1],
+            "None (N)" => ["N", 0.85],
+            "Low (L)" => ["L", 0.62], //(0.68 if Modified Scope is Changed)
+            "High (H)" => ["H", 0.27] //(0.50 if Modified Scope is Changed)
         ],
         "Modified User Interaction (MUI)" => [
-            "id" => "env_MUI",
-            "Not Defined (X)" => -1,
-            "None (N)" => 0.85,
-            "Required (R)" => 0.62
+            "id" => "MUI",
+            "Not Defined (X)" => ["X", -1],
+            "None (N)" => ["N", 0.85],
+            "Required (R)" => ["R", 0.62]
         ],
         "Modified Scope (MS)" => [
-            "id" => "env_MS",
-            "Not Defined (X)" => -1,
-            "Unchanged (S)" => 0,
-            "Changed (C)" => 1
+            "id" => "MS",
+            "Not Defined (X)" => ["X", -1],
+            "Unchanged (U)" => ["U", 0],
+            "Changed (C)" => ["C", 1]
         ],
         "Modified Confidentiality (MC)" => [
-            "id" => "env_MC",
-            "Not Defined (X)" => -1,
-            "None (N)" => 0,
-            "Low (L)" => 0.22,
-            "High (H)" => 0.56
+            "id" => "MC",
+            "Not Defined (X)" => ["X", -1],
+            "None (N)" => ["N", 0],
+            "Low (L)" => ["L", 0.22],
+            "High (H)" => ["H", 0.56]
         ],
         "Modified Integrity (MI)" => [
-            "id" => "env_MI",
-            "Not Defined (X)" => -1,
-            "None (N)" => 0,
-            "Low (L)" => 0.22,
-            "High (H)" => 0.56
+            "id" => "MI",
+            "Not Defined (X)" => ["X", -1],
+            "None (N)" => ["N", 0],
+            "Low (L)" => ["L", 0.22],
+            "High (H)" => ["H", 0.56]
         ],
         "Modified Availability (MA)" => [
-            "id" => "env_MA",
-            "Not Defined (X)" => -1,
-            "None (N)" => 0,
-            "Low (L)" => 0.22,
-            "High (H)" => 0.56
+            "id" => "MA",
+            "Not Defined (X)" => ["X", -1],
+            "None (N)" => ["N", 0],
+            "Low (L)" => ["L", 0.22],
+            "High (H)" => ["H", 0.56]
         ],
     ];
 
-    public function recuperation($value, $id)
+    public function recuperation($value, $id, $lettre)
     {
+        //si on n'appuie pas su le bouton NOT DEFINED
+        $this->UpdateVectorString($id, $this->vector_string_tab, $lettre);
+        
         switch ($id) {
-            case "base_AV":
+            case "AV":
                 $this->attack_vector = $value;
                 if($this->tab["ModifiedAttackVector"]==-1){$this->ModifiedAttackVector = $this->attack_vector;}
                 $this->select_case($id);
                 break;
-            case "base_AC":
+            case "AC":
                 $this->attack_complexity = $value;
                 if($this->tab["ModifiedAttackComplexity"]==-1){$this->ModifiedAttackComplexity = $this->attack_complexity;}
                 $this->select_case($id);
                 break;
-            case "base_UI":
+            case "UI":
                 $this->user_interaction = $value;
                 if($this->tab["ModifiedUserInteraction"]==-1){$this->ModifiedUserInteraction = $this->user_interaction;}
                 $this->select_case($id);
                 break;
-            case "base_I":
+            case "I":
                 $this->integrity = $value;
                 if($this->tab["ModifiedIntegrity"]==-1){$this->ModifiedIntegrity = $this->integrity;}
                 $this->select_case($id);
                 break;
-            case "base_S":
+            case "S":
                 if($value == 1 && $this->privilige_required  == 0.62){
                     $this->privilige_required = 0.68;
                 }elseif($value == 1 && $this->privilige_required == 0.27 ){
@@ -277,7 +284,7 @@ class Calculate extends Component
                 if($this->tab["ModifiedPrivilegesRequired"]==-1){$this->ModifiedPrivilegesRequired = $this->privilige_required;}
                 $this->select_case($id);
                 break;
-            case "base_PR":
+            case "PR":
                 if($this->scope == 1 && $value == 0.62){
                     $this->privilige_required = 0.68;
                 }elseif($this->scope == 1 && $value == 0.27 ){
@@ -288,26 +295,26 @@ class Calculate extends Component
                 if($this->tab["ModifiedPrivilegesRequired"]==-1){$this->ModifiedPrivilegesRequired = $this->privilige_required;}
                 $this->select_case($id);
                 break;
-            case "base_C":
+            case "C":
                 $this->confidentiality = $value;
                 if($this->tab["ModifiedConfidentiality"]==-1){$this->ModifiedConfidentiality = $this->confidentiality;}
                 $this->select_case($id);
                 break;
-            case "base_A":
+            case "A":
                 $this->availability = $value;
                 if($this->tab["ModifiedAvailability"]==-1){$this->ModifiedAvailability = $this->availability;}
                 $this->select_case($id);
                 break;
             // metrique temorelle
-            case "temporal_E":
+            case "E":
                 $this->exploit_code_matury = $value;
                 $this->calculateTemporalScore();
                 break;
-            case "temporal_RC":
+            case "RC":
                 $this->report_confidence = $value;
                 $this->calculateTemporalScore();
                 break;
-            case "temporal_RL":
+            case "RL":
                 $this->remediation_level = $value;
                 $this->calculateTemporalScore();
                 break;
@@ -356,6 +363,9 @@ class Calculate extends Component
         // jappelle la methode calcul de temporelscore et environnemental score
         $this->calculateTemporalScore();
         $this->CalculateEnvScore();
+
+        $this->vector_string = $this->GenerateVectorString($this->vector_string_tab);
+        
     }
 
     public function calculateTemporalScore()
@@ -368,29 +378,34 @@ class Calculate extends Component
             $this->severity_temporal = ratingScale($this->score_temporal);
             
             $this->CalculateEnvScore();
+
+            $this->vector_string = $this->GenerateVectorString($this->vector_string_tab);
         }
     }
 
 
 
-    public function recuperation_env($value, $id)
+    public function recuperation_env($value, $id, $lettre)
     {
+        //si on n'appuie pas su le bouton NOT DEFINED
+        $this->UpdateVectorString($id, $this->vector_string_tab, $lettre);
+
         switch ($id) {
-            case "env_CR":
+            case "CR":
                 $this->ConfidentialityRequirement = $value;
                 break;
-            case "env_IR":
+            case "IR":
                 $this->IntegrityRequirement = $value;
                 break;
-            case "env_AR":
+            case "AR":
                 $this->AvailabilityRequirement = $value;
                 break;
-            case "env_MAV":
+            case "MAV":
                 if($value==-1){$this->ModifiedAttackVector = $this->attack_vector; break;}
                 $this->ModifiedAttackVector = $value;
                 $this->tab["ModifiedAttackVector"] = 0;
                 break;
-            case "env_MS":
+            case "MS":
                 if($value==-1){$this->ModifiedScope = $this->scope; break;}
 
                 if($value == 1 && $this->ModifiedPrivilegesRequired  == 0.62){
@@ -406,7 +421,7 @@ class Calculate extends Component
                 $this->ModifiedScope = $value;
                 $this->tab["ModifiedScope"] = 0;
                 break;
-            case "env_MPR":
+            case "MPR":
                 if($value==-1){$this->ModifiedPrivilegesRequired = $this->privilige_required; break;}
 
                 if($this->ModifiedScope == 1 && $value == 0.62){
@@ -418,27 +433,27 @@ class Calculate extends Component
                     }
                 $this->tab["ModifiedPrivilegesRequired"] = 0;
                 break;
-            case "env_MAC":
+            case "MAC":
                 if($value==-1){$this->ModifiedAttackComplexity = $this->attack_complexity; break;}
                 $this->ModifiedAttackComplexity = $value;
                 $this->tab["ModifiedAttackComplexity"] = 0;
                 break;
-            case "env_MUI":
+            case "MUI":
                 if($value==-1){$this->ModifiedUserInteraction = $this->user_interaction; break;}
                 $this->ModifiedUserInteraction = $value;
                 $this->tab["ModifiedUserInteraction"] = 0;
                 break;
-            case "env_MC":
+            case "MC":
                 if($value==-1){$this->ModifiedConfidentiality = $this->confidentiality; break;}
                 $this->ModifiedConfidentiality = $value;
                 $this->tab["ModifiedConfidentiality"] = 0;
                 break;
-            case "env_MI":
+            case "MI":
                 if($value==-1){$this->ModifiedIntegrity = $this->integrity; break;}
                 $this->ModifiedIntegrity= $value;
                 $this->tab["ModifiedIntegrity"] = 0;
                 break;
-            case "env_MA":
+            case "MA":
                 if($value==-1){$this->ModifiedAvailability = $this->availability; break;}
                 $this->ModifiedAvailability = $value;
                 $this->tab["ModifiedAvailability"] = 0;
@@ -448,6 +463,8 @@ class Calculate extends Component
         }
 
         $this->CalculateEnvScore();
+        
+        $this->vector_string = $this->GenerateVectorString($this->vector_string_tab);
         
     }
 
@@ -498,6 +515,27 @@ class Calculate extends Component
             $this->severity_env = ratingScale($this->EnvironmentalScore);
         }
        
+    }
+
+    public function GenerateVectorString($tab)
+    {
+        $vector = "CVSS:3.1";
+
+        foreach ($tab as $key => $value) {
+            $vector = $vector . "/" . $key . ":" . $value; 
+        }
+
+        return $vector;
+    }
+
+    public function UpdateVectorString($id, $tab, $lettre)
+    {
+        //si on n'appuie pas su le bouton NOT DEFINED
+        if($lettre != "X"){
+            $this->vector_string_tab[$id] = $lettre;
+        }else{
+            unset($this->vector_string_tab[$id]);
+        }
     }
     
 

@@ -24,8 +24,8 @@
                             <button type="button" 
                                 name="{{ $key }}" 
                                 class="{{$temporal[$cle]['id']}} btn btn-secondary mt-1" 
-                                value="{{ $val }}" 
-                                wire:click="recuperation({{ $val }}, '{{$temporal[$cle]['id']}}')"
+                                value="{{ $val[1] }}" 
+                                wire:click="recuperation({{ $val[1] }}, '{{ $temporal[$cle]['id'] }}', '{{ $val[0] }}')"
                                 wire:ignore>
                                 {{ $key }}
                             </button>

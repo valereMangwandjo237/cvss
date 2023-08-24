@@ -25,8 +25,8 @@
                                 <button 
                                     type="button" id="" 
                                     class="{{$base[$cle]['id']}} btn btn-secondary mt-1" 
-                                    value="{{ $val }}" 
-                                    wire:click="recuperation({{ $val }}, '{{$base[$cle]['id']}}')"
+                                    value="{{ $val[1] }}" 
+                                    wire:click="recuperation({{ $val[1] }}, '{{ $base[$cle]['id'] }}', '{{ $val[0] }}')"
                                     wire:ignore>
                                     {{ $key }}
                                 </button>
@@ -40,7 +40,16 @@
         </div>
     </div>
 
+    <div class="p-4 font-weight-bold">
+        @if ($base_score !== null)
+            Vector String: {{ $vector_string }}   
+        @endif
+    </div>
+    
+
     @include('files.temporal')
+
+    <div class="p-4"></div>
 
     @include('files.environ')
 

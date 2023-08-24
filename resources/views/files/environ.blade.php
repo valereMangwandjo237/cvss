@@ -26,8 +26,8 @@
                             type="button" 
                             name="{{ $key }}" 
                             class="{{$environmental[$cle]['id']}} btn btn-secondary mt-1"
-                            wire:click="recuperation_env({{ $val }}, '{{$environmental[$cle]['id']}}')"
-                            value="{{ $val }}"
+                            wire:click="recuperation_env({{ $val[1] }}, '{{ $environmental[$cle]['id'] }}', '{{ $val[0] }}')"
+                            value="{{ $val[1] }}"
                             wire:ignore>{{ $key }}</button>
                             @endif
                         @endforeach
